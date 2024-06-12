@@ -7,6 +7,7 @@ class ByFolder_CalculationStrategy: public CalculationStrategy
 {
 public:
     QMap<QString, qint64> SomeCalculationMethod(const QString& path) override;
+private:
     qint64 GetSize(const QString& path);
 };
 

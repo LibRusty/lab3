@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     ByFolder_CalculationStrategy f;
     ByFileType_CalculationStrategy g;
-    QString str = "C:/new/test1"; // путь к папке
+    QString str = "C:/lab3/test/test3"; // путь к папке
     MainWindow_FileBrowser browser(&f);
     //MainWindow_FileBrowser browser(&g);
     QMap<QString, qint64> v = browser.Calculation(str);
