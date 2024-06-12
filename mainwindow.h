@@ -6,22 +6,27 @@
 #include <QFileSystemModel>
 #include <QTreeView>
 #include <QTableView>
+#include "fileexplorermodel.h"
+#include "byfiletype_calculationstrategy.h"
+#include "byfolder_calculationstrategy.h"
 
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 private slots:
-
 	void on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
-
+    void SetStrategy();
 public:
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
+    QList<FileData> Calculation(const QString& path);
 private:
-	QFileSystemModel *fileModel;
+    FileExplorerModel *fileModel;
 	QFileSystemModel *dirModel;
 	QTreeView *treeView;
 	QTableView *tableView;
+    CalculationStrategy* calculation; // стратегия подсчёта
+    IAdapter* adapter; // адаптер
 };
 
 #endif // MAINWINDOW_H
