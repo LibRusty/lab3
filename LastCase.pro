@@ -25,12 +25,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     adapter.cpp \
+    byfiletype_calculationstrategy.cpp \
+    byfolder_calculationstreategy.cpp \
         main.cpp \
         mainwindow.cpp \
     fileexplorermodel.cpp
 
 HEADERS += \
     adapter.h \
+    byfiletype_calculationstrategy.h \
+    byfolder_calculationstrategy.h \
+    calculationstrategy.h \
     filedata.h \
     iadapter.h \
         mainwindow.h \
