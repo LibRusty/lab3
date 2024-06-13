@@ -15,11 +15,11 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 private slots:
 	void on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected);
-    void SetStrategy();
+    void SetStrategy(int index);
 public:
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
-    QList<FileData> Calculation(const QString& path);
+    void Calculation(QString& path);
 private:
     FileExplorerModel *fileModel;
 	QFileSystemModel *dirModel;

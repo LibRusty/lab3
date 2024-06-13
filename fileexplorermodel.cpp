@@ -29,7 +29,7 @@ QVariant FileExplorerModel::headerData(int section, Qt::Orientation orientation,
     case NAME:
         return "Название";
     case SIZE:
-        return "Размер";
+        return "Размер в байтах";
     case PERCENT:
         return "В процентах";
     }
