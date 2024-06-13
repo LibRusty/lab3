@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
     //QString homePath = QDir::homePath(); // возвращает абсолютный путь к домашнему каталогу пользователя (C:/Users/Username)
     // Определим модель файловой системы:
-    QString homePath = "C:/pyinstaller-6.6.0";
+    QString homePath = "C:/msys64/dev";
     dirModel = new QFileSystemModel(this); // модель директории для дальнейшего отображения слева
 	dirModel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
 	dirModel->setRootPath(homePath);
@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
     tableView = new QTableView();
     tableView->setModel(fileModel);
+    tableView->horizontalHeader()->resizeSection(0, 200);
 
 	treeView = new QTreeView();
     treeView->setModel(dirModel); // для модели директории
@@ -107,21 +108,7 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
 		this->statusBar()->showMessage("Выбранный путь : " + dirModel->filePath(indexs.constFirst()));
 	}
 
-	//TODO: !!!!!
-	/*
-	Тут простейшая обработка ширины первого столбца относительно длины названия папки.
-	Это для удобства, что бы при выборе папки имя полностью отображалась в  первом столбце.
-	Требуется доработка(переработка).
-	*/
-	int length = 200;
-	int dx = 30;
-
-	if (dirModel->fileName(index).length() * dx > length) {
-		length = length + dirModel->fileName(index).length() * dx;
-		qDebug() << "r = " << index.row() << "c = " << index.column() << dirModel->fileName(index) << dirModel->fileInfo(
-					 index).size();
-
-	}
+    treeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
 	treeView->header()->resizeSection(index.column(), length + dirModel->fileName(index).length());
     Calculation(filePath);
