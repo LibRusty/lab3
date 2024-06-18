@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
     //QString homePath = QDir::homePath(); // возвращает абсолютный путь к домашнему каталогу пользователя (C:/Users/Username)
     // Определим модель файловой системы:
-    QString homePath = "C:/msys64/dev";
+    QString homePath = "C:/test";
     dirModel = new QFileSystemModel(this); // модель директории для дальнейшего отображения слева
 	dirModel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
 	dirModel->setRootPath(homePath);
@@ -127,11 +127,12 @@ void MainWindow::Calculation(QString& path)
 { 
     QMap<QString, qint64> m = calculation->SomeCalculationMethod(path);
     fileModel = new FileExplorerModel(this, adapter->Action(m));
-    // модель файловой системы для дальнейшего отображения справа
+    fileModel->setRootPath(path);
+
     fileModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::AllDirs);
     fileModel->setRootPath(path);
     tableView->setModel(fileModel);
-    tableView->setRootIndex(fileModel->setRootPath(path));
+    tableView->setRootIndex(fileModel->index(fileModel->rootPath(), 0));
 }
 
 MainWindow::~MainWindow()

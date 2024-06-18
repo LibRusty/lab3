@@ -3,6 +3,7 @@
 #include <QFileSystemModel>
 #include <QMap>
 #include "adapter.h"
+#include "QStandardItemModel"
 
 class FileExplorerModel: public QFileSystemModel
 {
