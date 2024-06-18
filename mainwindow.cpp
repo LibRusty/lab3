@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
     QMap<QString, qint64> m = calculation->SomeCalculationMethod(homePath);
     fileModel = new FileExplorerModel(this, adapter->Action(m));
-    fileModel->setFilter(QDir::NoDotAndDotDot | QDir::Files);
+    fileModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::AllDirs | QDir::Hidden);
     fileModel->setRootPath(homePath);
     //создаёт модель описания файловой системы справа
 
@@ -109,8 +109,6 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
 	}
 
     treeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-	treeView->header()->resizeSection(index.column(), length + dirModel->fileName(index).length());
     Calculation(filePath);
 }
 
@@ -128,12 +126,10 @@ void MainWindow::SetStrategy(int index)
 void MainWindow::Calculation(QString& path)
 { 
     QMap<QString, qint64> m = calculation->SomeCalculationMethod(path);
-    fileModel = new FileExplorerModel(this,
-                                      adapter->Action(m));
+    fileModel = new FileExplorerModel(this, adapter->Action(m));
     // модель файловой системы для дальнейшего отображения справа
-    fileModel->setFilter(QDir::NoDotAndDotDot | QDir::Files);
+    fileModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::AllDirs);
     fileModel->setRootPath(path);
-
     tableView->setModel(fileModel);
     tableView->setRootIndex(fileModel->setRootPath(path));
 }

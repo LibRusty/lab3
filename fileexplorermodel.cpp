@@ -2,7 +2,13 @@
 
 FileExplorerModel::FileExplorerModel(QObject *parent, QList<FileData> list): QFileSystemModel(parent)
 {
-    dataModel = list;
+    if (!list.empty())
+        dataModel = list;
+    else
+    {
+        FileData g("(Current folder)", "0", "0");
+        dataModel.push_back(g);
+    }
 }
 
 int FileExplorerModel::rowCount(const QModelIndex &parent) const
