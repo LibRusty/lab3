@@ -19,7 +19,7 @@ private slots:
 public:
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
-    void Calculation(QString& path);
+    void Calculation(QString path);
 private:
     FileExplorerModel *fileModel;
 	QFileSystemModel *dirModel;

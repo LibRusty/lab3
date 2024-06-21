@@ -1,14 +1,15 @@
 #include "fileexplorermodel.h"
 
-FileExplorerModel::FileExplorerModel(QObject *parent, QList<FileData> list): QFileSystemModel(parent)
+FileExplorerModel::FileExplorerModel(QObject *parent, QList<FileData> list): QAbstractItemModel(parent)
 {
-    if (!list.empty())
-        dataModel = list;
-    else
-    {
-        FileData g("(Current folder)", "0", "0");
-        dataModel.push_back(g);
-    }
+    dataModel = list;
+}
+
+void FileExplorerModel::setData(QList<FileData> filedata)
+{
+    beginResetModel();
+    dataModel = filedata;
+    endResetModel();
 }
 
 int FileExplorerModel::rowCount(const QModelIndex &parent) const
@@ -55,4 +56,25 @@ QVariant FileExplorerModel::data(const QModelIndex &index, int role) const
     } else if (index.column() == 2) {
         return dataModel[index.row()].percent;
     }
+}
+
+QModelIndex FileExplorerModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (hasIndex(row, column, parent)) {
+        return createIndex(row, column);
+    }
+    return QModelIndex();
+}
+
+QModelIndex FileExplorerModel::parent(const QModelIndex &child) const
+{
+    return QModelIndex();
+}
+
+Qt::ItemFlags FileExplorerModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid()) {
+        return Qt::NoItemFlags;
+    }
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }

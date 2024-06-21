@@ -11,8 +11,7 @@
 #include <QDebug>
 #include <QComboBox>
 #include <QLabel>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
+#include <QGridLayout>
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 {
@@ -22,11 +21,14 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	this->setStatusBar(new QStatusBar(this));
 	this->statusBar()->showMessage("Choosen Path: ");
 
+    QWidget* widget = new QWidget(this);
+    QGridLayout* layout = new QGridLayout(widget);
+    widget->setLayout(layout);
+
     adapter = new Adapter();
     calculation = new ByFolder_CalculationStrategy();
 
-    //создаём слой с виджетами выбора стратегии
-    QHBoxLayout* layout_choice = new QHBoxLayout(this);
+    //создаём слой с виджетами выбора стратегии 
     QLabel* calc_txt = new QLabel("Action: ", this);
 
     QComboBox* action_choice = new QComboBox(this); // виджет выбора стратегии
@@ -35,8 +37,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
     action_choice->addItems(list_choice_action);
     action_choice->setCurrentIndex(0);
 
-    layout_choice->addWidget(calc_txt);
-    layout_choice->addWidget(action_choice);
+    layout->addWidget(calc_txt, 0, 0);
+    layout->addWidget(action_choice, 0, 1);
 
     //QString homePath = QDir::homePath(); // возвращает абсолютный путь к домашнему каталогу пользователя (C:/Users/Username)
     // Определим модель файловой системы:
@@ -47,8 +49,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
     QMap<QString, qint64> m = calculation->SomeCalculationMethod(homePath);
     fileModel = new FileExplorerModel(this, adapter->Action(m));
-    fileModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::AllDirs | QDir::Hidden);
-    fileModel->setRootPath(homePath);
     //создаёт модель описания файловой системы справа
 
     tableView = new QTableView();
@@ -63,15 +63,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	splitter->addWidget(treeView);
 	splitter->addWidget(tableView);
 
-    QHBoxLayout* layout_view = new QHBoxLayout(this);
-    layout_view->addWidget(splitter);
-
-    QVBoxLayout* layout = new QVBoxLayout(this);
-    layout->addLayout(layout_choice);
-    layout->addLayout(layout_view);
-
-    QWidget* widget = new QWidget(this);
-    widget->setLayout(layout);
+    layout->addWidget(splitter, 1, 0, 1, 4);
     setCentralWidget(widget);
 
     QItemSelectionModel *selectionModel = treeView->selectionModel();
@@ -119,20 +111,14 @@ void MainWindow::SetStrategy(int index)
         case 0: calculation = new ByFolder_CalculationStrategy(); break;
         case 1: calculation = new ByFileType_CalculationStrategy(); break;
     }
-    QString s = fileModel->rootPath();
-    Calculation(s);
+    Calculation(this->statusBar()->currentMessage().section(": ", 1,1).trimmed());
 }
 
-void MainWindow::Calculation(QString& path)
+void MainWindow::Calculation(QString path)
 { 
     QMap<QString, qint64> m = calculation->SomeCalculationMethod(path);
-    fileModel = new FileExplorerModel(this, adapter->Action(m));
-    fileModel->setRootPath(path);
-
-    fileModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::AllDirs);
-    fileModel->setRootPath(path);
-    tableView->setModel(fileModel);
-    tableView->setRootIndex(fileModel->index(fileModel->rootPath(), 0));
+    fileModel->setData(adapter->Action(m));
+    tableView->reset();
 }
 
 MainWindow::~MainWindow()
