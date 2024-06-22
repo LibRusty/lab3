@@ -16,4 +16,5 @@ public:
     virtual ~CalculationStrategy() = default;
 };
 
+
 #endif // CALCULATIONSTRATEGY_H
