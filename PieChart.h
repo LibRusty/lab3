@@ -6,7 +6,7 @@
 
 class PieChart: public Chart
 {
-    QtCharts::QChart* DrawChart(QMap<QString, qint64> data)
+    QtCharts::QChart* DrawChart(QMap<QString, qreal> data)
     {
         QtCharts::QChart* pie_chart = new QtCharts::QChart();
         QtCharts::QPieSeries* series = new QtCharts::QPieSeries(pie_chart);

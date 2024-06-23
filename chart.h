@@ -10,9 +10,9 @@
 class Chart
 {
 public:
-    QtCharts::QChart* CreateChart(QMap<QString, qint64>);
+    QtCharts::QChart* CreateChart(QMap<QString, qreal>);
 protected:
-    virtual QtCharts::QChart* DrawChart(QMap<QString, qint64>);
+    virtual QtCharts::QChart* DrawChart(QMap<QString, qreal>);
     virtual void DrawLegend(QtCharts::QChart&);
 };
 

@@ -15,7 +15,7 @@ public:
     {
         delete piechart;
         PieChart p;
-        piechart = p.CreateChart(data);
+        piechart = p.CreateChart(Action(data));
     }
     QWidget* getWidget()
     {
@@ -24,6 +24,7 @@ public:
     }
     ~PieChartAdapter() {delete piechart;}
 private:
+    QMap<QString, qreal> Action(QMap<QString, qint64>& v);
     QtCharts::QChart* piechart;
 };
 

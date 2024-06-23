@@ -11,7 +11,7 @@ public:
     void UpdateDisplay(QMap<QString, qint64> data)
     {
         BarChart b;
-        barchart = b.CreateChart(data);
+        barchart = b.CreateChart(Action(data));
     }
     QWidget* getWidget()
     {
@@ -21,6 +21,7 @@ public:
     ~BarChartAdapter() {delete barchart;}
 private:
     QtCharts::QChart* barchart;
+    QMap<QString, qreal> Action(QMap<QString, qint64>&);
 };
 
 #endif // BARCHARTADAPTER_H

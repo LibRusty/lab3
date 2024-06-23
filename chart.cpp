@@ -1,6 +1,6 @@
 #include "chart.h"
 
-QtCharts::QChart* Chart::CreateChart(QMap<QString, qint64> data)
+QtCharts::QChart* Chart::CreateChart(QMap<QString, qreal> data)
 {
     QtCharts::QChart* chart = DrawChart(data);
     DrawLegend(*chart);
@@ -10,5 +10,5 @@ QtCharts::QChart* Chart::CreateChart(QMap<QString, qint64> data)
 void Chart::DrawLegend(QtCharts::QChart& chart)
 {
     chart.legend()->setVisible(true);
-    chart.legend()->setAlignment(Qt::AlignBottom);
+    chart.legend()->setAlignment(Qt::AlignRight);
 }

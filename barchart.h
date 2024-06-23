@@ -6,7 +6,7 @@
 
 class BarChart: public Chart
 {
-    QtCharts::QChart* DrawChart(QMap<QString, qint64> data)
+    QtCharts::QChart* DrawChart(QMap<QString, qreal> data)
     {
         QtCharts::QChart* bar_chart = new QtCharts::QChart();
         QtCharts::QStackedBarSeries* series = new QtCharts::QStackedBarSeries(bar_chart);

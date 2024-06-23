@@ -4,6 +4,21 @@ QMap<QString, qint64> ByFileType_CalculationStrategy::SomeCalculationMethod(cons
 {
     QMap<QString, qint64> map;
     GetSize(path, map);
+    qint64 total = 0;
+    for (auto x = map.begin(); x != map.end(); x++)
+        total += x.value();
+    qint64 size_others = 0;
+    for (auto x = map.begin(); x != map.end(); x++)
+    {
+        if (x.value() < 0.01 * total)
+        {
+            size_others += x.value();
+            map.erase(x);
+            x--;
+        }
+    }
+    if (size_others)
+        map["Others"] = size_others;
     return map;
 }
 

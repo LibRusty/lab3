@@ -25,13 +25,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     adapter.cpp \
+    barchartadapter.cpp \
     byfiletype_calculationstrategy.cpp \
     byfolder_calculationstreategy.cpp \
     chart.cpp \
     listviewadapter.cpp \
         main.cpp \
         mainwindow.cpp \
-    fileexplorermodel.cpp
+    fileexplorermodel.cpp \
+    piechartadapter.cpp
 
 HEADERS += \
     PieChart.h \

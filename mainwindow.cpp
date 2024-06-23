@@ -162,7 +162,7 @@ void MainWindow::Calculation(QString path)
     QMap<QString, qint64> m = calculation->SomeCalculationMethod(path);
     calculation->OnFinish(m);
     QWidget* newview = currentAdapter->getWidget();
-    if (splitter->widget(1)) {
+    if (splitter->widget(1) && splitter->widget(1) != newview) {
         splitter->replaceWidget(1, newview);
     }
     else
