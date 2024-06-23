@@ -4,16 +4,26 @@
 #include "filebrowserobserver.h"
 #include "PieChart.h"
 
-class PieChartAdpater: public FileBrowserObserver
+class PieChartAdapter: public FileBrowserObserver
 {
 public:
-    PieChartAdapter(PieChart* p) {piechart = p;}
+    PieChartAdapter(QtCharts::QChart* p = nullptr)
+    {
+        piechart = p;
+    }
     void UpdateDisplay(QMap<QString, qint64> data)
     {
-        piechart->CreateChart(data);
+        PieChart* p;
+        piechart = p->CreateChart(data);
     }
+    QWidget* getWidget()
+    {
+        QtCharts::QChartView* view = new QtCharts::QChartView(piechart);
+        return view;
+    }
+    ~PieChartAdapter() {delete piechart;}
 private:
-    PieChart* piechart;
+    QtCharts::QChart* piechart;
 };
 
 #endif // PIECHARTADAPTER_H

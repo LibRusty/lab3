@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui charts
+QT  += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,6 +28,7 @@ SOURCES += \
     byfiletype_calculationstrategy.cpp \
     byfolder_calculationstreategy.cpp \
     chart.cpp \
+    listviewadapter.cpp \
         main.cpp \
         mainwindow.cpp \
     fileexplorermodel.cpp

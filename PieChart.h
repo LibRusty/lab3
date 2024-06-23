@@ -11,14 +11,15 @@ class PieChart: public Chart
         QtCharts::QChart* pie_chart = new QtCharts::QChart();
         QtCharts::QPieSeries* series = new QtCharts::QPieSeries(pie_chart);
 
-        for (auto x: data)
+        for (auto x = data.begin(); x != data.end(); x++)
         {
-            series->append(x.first, x.second);
+            series->append(x.key(), x.value());
         }
 
         pie_chart->addSeries(series);
         return pie_chart;
     }
+
 };
 
 #endif // PIECHART_H

@@ -4,17 +4,23 @@
 #include "filebrowserobserver.h"
 #include "barchart.h"
 
-class BarChartAdpater: public FileBrowserObserver
+class BarChartAdapter: public FileBrowserObserver
 {
 public:
-    BarChartAdapter(BarChart* p) {barchart = p;}
+    BarChartAdapter(QtCharts::QChart* p = nullptr) {barchart = p;}
     void UpdateDisplay(QMap<QString, qint64> data)
     {
-        barchart->CreateChart(data);
+        BarChart* b;
+        barchart = b->CreateChart(data);
+    }
+    QWidget* getWidget()
+    {
+        QtCharts::QChartView* view = new QtCharts::QChartView(barchart);
+        return view;
     }
     ~BarChartAdapter() {delete barchart;}
 private:
-    BarChart* barchart;
+    QtCharts::QChart* barchart;
 };
 
 #endif // BARCHARTADAPTER_H

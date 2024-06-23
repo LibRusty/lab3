@@ -15,23 +15,18 @@ class CalculationStrategy
 {
 public:
     virtual QMap<QString, qint64> SomeCalculationMethod(const QString& path) = 0;
-    virtual ~CalculationStrategy() = default;
+    virtual ~CalculationStrategy() {delete observer;}
 
-    virtual void OnFinish(QMap<QString, qint64>)
+    virtual void OnFinish(QMap<QString, qint64> data)
     {
-        for (auto x: observers)
-            x->updateDisplay(QMap<QString, qint64>);
+        observer->UpdateDisplay(data);
     }
-    virtual void addObserver(FileBrowserObserver* f)
+    virtual void resetObserver(FileBrowserObserver* f)
     {
-        observers.push_back(f);
-    }
-    virtual void removeObserver(FileBrowserObserver* f)
-    {
-        observers.erase(qFind(observers, f));
+        observer = f;
     }
 private:
-    QVector<FileBrowserObserver*> observers;
+    FileBrowserObserver* observer;
 };
 
 

@@ -2,6 +2,7 @@
 #define BARCHART_H
 #include "chart.h"
 #include <QStackedBarSeries>
+#include <QBarSet>
 
 class BarChart: public Chart
 {
@@ -11,16 +12,16 @@ class BarChart: public Chart
         QtCharts::QStackedBarSeries* series = new QtCharts::QStackedBarSeries(bar_chart);
 
         QList<QtCharts::QBarSet*> barset;
-        for (auto x: data)
+        for (auto x = data.begin(); x != data.end(); x++)
         {
-            QtCharts::QBarSet* s = new QtCharts::QBarSet(x.first);
-            *s << x.second;
+            QtCharts::QBarSet* s = new QtCharts::QBarSet(x.key());
+            s->append(x.value());
             barset.push_back(s);
         }
         series->append(barset);
 
-        pie_chart->addSeries(series);
-        return pie_chart;
+        bar_chart->addSeries(series);
+        return bar_chart;
     }
 };
 

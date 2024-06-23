@@ -1,11 +1,10 @@
 #include "chart.h"
 
-QtCharts::QChartView* Chart::CreateChart(QMap<QString, qint64> data)
+QtCharts::QChart* Chart::CreateChart(QMap<QString, qint64> data)
 {
     QtCharts::QChart* chart = DrawChart(data);
     DrawLegend(*chart);
-    QtCharts::QChartView* chartview = new QtCharts::QChartView(chart);
-    return chartview;
+    return chart;
 }
 
 void Chart::DrawLegend(QtCharts::QChart& chart)

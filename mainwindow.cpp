@@ -25,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
     QGridLayout* layout = new QGridLayout(widget);
     widget->setLayout(layout);
 
-    adapter = new Adapter();
     calculation = new ByFolder_CalculationStrategy();
 
     //создаём слой с виджетами выбора стратегии 
@@ -40,6 +39,16 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
     layout->addWidget(calc_txt, 0, 0);
     layout->addWidget(action_choice, 0, 1);
 
+    QLabel* view_txt = new QLabel("View: ", this);
+    QComboBox* view_choice = new QComboBox(this); // виджет выбора вида
+    QStringList list_choice_view;
+    list_choice_view << "List View" << "Pie Chart" << "Bar Chart";
+    view_choice->addItems(list_choice_view);
+    view_choice->setCurrentIndex(0);
+
+    layout->addWidget(view_txt, 0, 2);
+    layout->addWidget(view_choice, 0, 3);
+
     //QString homePath = QDir::homePath(); // возвращает абсолютный путь к домашнему каталогу пользователя (C:/Users/Username)
     // Определим модель файловой системы:
     QString homePath = "C:/test";
@@ -48,20 +57,22 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	dirModel->setRootPath(homePath);
 
     QMap<QString, qint64> m = calculation->SomeCalculationMethod(homePath);
-    fileModel = new FileExplorerModel(this, adapter->Action(m));
+    FileExplorerModel* fileModel = new FileExplorerModel(this);
     //создаёт модель описания файловой системы справа
 
-    tableView = new QTableView();
-    tableView->setModel(fileModel);
-    tableView->horizontalHeader()->resizeSection(0, 200);
+    // По умолчанию используем ListViewAdapter
+    currentAdapter = new ListViewAdapter(fileModel);
+    calculation->resetObserver(currentAdapter);
 
-	treeView = new QTreeView();
+    QWidget* view = currentAdapter->getWidget();
+
+    QTreeView* treeView = new QTreeView();
     treeView->setModel(dirModel); // для модели директории
 
 	treeView->expandAll();
 	QSplitter *splitter = new QSplitter(parent);
 	splitter->addWidget(treeView);
-	splitter->addWidget(tableView);
+    splitter->addWidget(view);
 
     layout->addWidget(splitter, 1, 0, 1, 4);
     setCentralWidget(widget);
@@ -69,9 +80,11 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
     QItemSelectionModel *selectionModel = treeView->selectionModel();
 
 	treeView->header()->resizeSection(0, 200);
+
 	//Выполняем соединения слота и сигнала который вызывается когда осуществляется выбор элемента в TreeView
     connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &MainWindow::on_selectionChangedSlot);
     connect(action_choice, QOverload<int>::of(&QComboBox::currentIndexChanged), this, MainWindow::SetStrategy);
+    connect(view_choice, QOverload<int>::of(&QComboBox::currentIndexChanged), this, MainWindow::SetView);
     //Пример организации установки курсора в TreeView относительно модельного индекса
 	QItemSelection toggleSelection;
 	QModelIndex topLeft;
@@ -80,6 +93,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
 	toggleSelection.select(topLeft, topLeft);
 	selectionModel->select(toggleSelection, QItemSelectionModel::Toggle);
+
+
 }
 //Слот для обработки выбора элемента в TreeView
 //выбор осуществляется с помощью курсора
@@ -106,23 +121,55 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
 
 void MainWindow::SetStrategy(int index)
 {
+    delete calculation;
     switch(index)
     {
         case 0: calculation = new ByFolder_CalculationStrategy(); break;
         case 1: calculation = new ByFileType_CalculationStrategy(); break;
     }
+    calculation->resetObserver(currentAdapter);
     Calculation(this->statusBar()->currentMessage().section(": ", 1,1).trimmed());
 }
 
+void MainWindow::SetView(int index)
+{
+    switch(index)
+    {
+        case 0:
+        {
+            FileExplorerModel* fileModel = new FileExplorerModel();
+            currentAdapter = new ListViewAdapter(fileModel);
+            break;
+        }
+        case 1:
+        {
+            currentAdapter = new PieChartAdapter();
+            break;
+        }
+        case 2:
+        {
+            currentAdapter = new BarChartAdapter();
+            break;
+        }
+    }
+    calculation->resetObserver(currentAdapter);
+    splitter->widget(1)->deleteLater();
+    QWidget* newview = currentAdapter->getWidget();
+    splitter->addWidget(newview);
+    Calculation(this->statusBar()->currentMessage().section(": ", 1, 1).trimmed());
+}
+
 void MainWindow::Calculation(QString path)
-{ 
+{
     QMap<QString, qint64> m = calculation->SomeCalculationMethod(path);
-    fileModel->setData(adapter->Action(m));
-    tableView->reset();
+    calculation->OnFinish(m);
 }
 
 MainWindow::~MainWindow()
 {
+    delete dirModel;
+    delete treeView;
     delete calculation;
-    delete adapter;
+    delete currentAdapter;
+    delete splitter;
 }

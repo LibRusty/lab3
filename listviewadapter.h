@@ -8,14 +8,24 @@
 class ListViewAdapter: public FileBrowserObserver
 {
 public:
-    ListViewAdapter(FileExplorerModel * f, QTableView t) {model = f; table = t; table->setModel(model);}
+    ListViewAdapter(FileExplorerModel* f)
+    {
+        model = f;
+        table = new QTableView();
+        table->setModel(model);
+    }
     void UpdateDisplay(QMap<QString, qint64> data)
     {
-        model->setData(data);
+        model->setData(Action(data));
         table->reset();
     }
-    ~ListViewAdapter() {delete piechart;}
+    QWidget* getWidget()
+    {
+        return table;
+    }
+    ~ListViewAdapter() {delete table; delete model;}
 private:
+    QList<FileData> Action(QMap<QString, qint64>& v);
     FileExplorerModel *model;
     QTableView* table;
 };
