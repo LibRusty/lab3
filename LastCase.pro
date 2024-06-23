@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,15 +27,19 @@ SOURCES += \
     adapter.cpp \
     byfiletype_calculationstrategy.cpp \
     byfolder_calculationstreategy.cpp \
+    chart.cpp \
         main.cpp \
         mainwindow.cpp \
     fileexplorermodel.cpp
 
 HEADERS += \
+    PieChart.h \
     adapter.h \
+    barchart.h \
     byfiletype_calculationstrategy.h \
     byfolder_calculationstrategy.h \
     calculationstrategy.h \
+    chart.h \
     filedata.h \
     iadapter.h \
         mainwindow.h \
