@@ -19,7 +19,6 @@ class PieChart: public Chart
         pie_chart->addSeries(series);
         return pie_chart;
     }
-
 };
 
 #endif // PIECHART_H

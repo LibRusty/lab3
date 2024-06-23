@@ -13,8 +13,9 @@ public:
     }
     void UpdateDisplay(QMap<QString, qint64> data)
     {
-        PieChart* p;
-        piechart = p->CreateChart(data);
+        delete piechart;
+        PieChart p;
+        piechart = p.CreateChart(data);
     }
     QWidget* getWidget()
     {

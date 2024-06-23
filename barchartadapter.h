@@ -10,8 +10,8 @@ public:
     BarChartAdapter(QtCharts::QChart* p = nullptr) {barchart = p;}
     void UpdateDisplay(QMap<QString, qint64> data)
     {
-        BarChart* b;
-        barchart = b->CreateChart(data);
+        BarChart b;
+        barchart = b.CreateChart(data);
     }
     QWidget* getWidget()
     {

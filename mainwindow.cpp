@@ -29,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
     //создаём слой с виджетами выбора стратегии 
     QLabel* calc_txt = new QLabel("Action: ", this);
-
     QComboBox* action_choice = new QComboBox(this); // виджет выбора стратегии
     QStringList list_choice_action;
     list_choice_action << "Group file size by folders" << "Group file size by file type";
@@ -57,21 +56,22 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	dirModel->setRootPath(homePath);
 
     QMap<QString, qint64> m = calculation->SomeCalculationMethod(homePath);
-    FileExplorerModel* fileModel = new FileExplorerModel(this);
+    FileExplorerModel* fileModel = new FileExplorerModel();
     //создаёт модель описания файловой системы справа
 
     // По умолчанию используем ListViewAdapter
     currentAdapter = new ListViewAdapter(fileModel);
     calculation->resetObserver(currentAdapter);
+    calculation->OnFinish(m);
 
     QWidget* view = currentAdapter->getWidget();
 
-    QTreeView* treeView = new QTreeView();
+    treeView = new QTreeView();
     treeView->setModel(dirModel); // для модели директории
+    treeView->expandAll();
 
-	treeView->expandAll();
-	QSplitter *splitter = new QSplitter(parent);
-	splitter->addWidget(treeView);
+    splitter = new QSplitter(parent);
+    splitter->addWidget(treeView);
     splitter->addWidget(view);
 
     layout->addWidget(splitter, 1, 0, 1, 4);
@@ -79,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
     QItemSelectionModel *selectionModel = treeView->selectionModel();
 
-	treeView->header()->resizeSection(0, 200);
+    treeView->header()->resizeSection(0, 200);
 
 	//Выполняем соединения слота и сигнала который вызывается когда осуществляется выбор элемента в TreeView
     connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &MainWindow::on_selectionChangedSlot);
@@ -94,7 +94,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	toggleSelection.select(topLeft, topLeft);
 	selectionModel->select(toggleSelection, QItemSelectionModel::Toggle);
 
-
 }
 //Слот для обработки выбора элемента в TreeView
 //выбор осуществляется с помощью курсора
@@ -103,7 +102,6 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
 {
 	//Q_UNUSED(selected);
 	Q_UNUSED(deselected);
-	QModelIndex index = treeView->selectionModel()->currentIndex();
 	QModelIndexList indexs =  selected.indexes();
 	QString filePath = "";
 
@@ -121,7 +119,6 @@ void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const Q
 
 void MainWindow::SetStrategy(int index)
 {
-    delete calculation;
     switch(index)
     {
         case 0: calculation = new ByFolder_CalculationStrategy(); break;
@@ -133,6 +130,10 @@ void MainWindow::SetStrategy(int index)
 
 void MainWindow::SetView(int index)
 {
+    if (currentAdapter) {
+        delete currentAdapter;
+        currentAdapter = nullptr;
+    }
     switch(index)
     {
         case 0:
@@ -153,9 +154,6 @@ void MainWindow::SetView(int index)
         }
     }
     calculation->resetObserver(currentAdapter);
-    splitter->widget(1)->deleteLater();
-    QWidget* newview = currentAdapter->getWidget();
-    splitter->addWidget(newview);
     Calculation(this->statusBar()->currentMessage().section(": ", 1, 1).trimmed());
 }
 
@@ -163,13 +161,20 @@ void MainWindow::Calculation(QString path)
 {
     QMap<QString, qint64> m = calculation->SomeCalculationMethod(path);
     calculation->OnFinish(m);
+    QWidget* newview = currentAdapter->getWidget();
+    if (splitter->widget(1)) {
+        splitter->replaceWidget(1, newview);
+    }
+    else
+        splitter->addWidget(newview);
+    splitter->setSizes(QList<int>{200, 200});
 }
 
 MainWindow::~MainWindow()
 {
     delete dirModel;
     delete treeView;
+    delete splitter;
     delete calculation;
     delete currentAdapter;
-    delete splitter;
 }
