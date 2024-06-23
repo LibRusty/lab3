@@ -13,7 +13,7 @@ class PieChart: public Chart
 
         for (auto x = data.begin(); x != data.end(); x++)
         {
-            series->append(x.key(), x.value());
+            series->append(x.key() + " (" + QString::number(x.value()) + "%)", x.value());
         }
 
         pie_chart->addSeries(series);

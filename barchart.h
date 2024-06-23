@@ -1,7 +1,7 @@
 #ifndef BARCHART_H
 #define BARCHART_H
 #include "chart.h"
-#include <QStackedBarSeries>
+#include <QBarSeries>
 #include <QBarSet>
 
 class BarChart: public Chart
@@ -9,12 +9,12 @@ class BarChart: public Chart
     QtCharts::QChart* DrawChart(QMap<QString, qreal> data)
     {
         QtCharts::QChart* bar_chart = new QtCharts::QChart();
-        QtCharts::QStackedBarSeries* series = new QtCharts::QStackedBarSeries(bar_chart);
+        QtCharts::QBarSeries* series = new QtCharts::QBarSeries(bar_chart);
 
         QList<QtCharts::QBarSet*> barset;
         for (auto x = data.begin(); x != data.end(); x++)
         {
-            QtCharts::QBarSet* s = new QtCharts::QBarSet(x.key());
+            QtCharts::QBarSet* s = new QtCharts::QBarSet(x.key() + " (" + QString::number(x.value()) + "%)");
             s->append(x.value());
             barset.push_back(s);
         }
