@@ -36,11 +36,15 @@ HEADERS += \
     PieChart.h \
     adapter.h \
     barchart.h \
+    barchartadapter.h \
     byfiletype_calculationstrategy.h \
     byfolder_calculationstrategy.h \
     calculationstrategy.h \
     chart.h \
+    filebrowserobserver.h \
     filedata.h \
     iadapter.h \
+    listviewadapter.h \
         mainwindow.h \
-    fileexplorermodel.h
+    fileexplorermodel.h \
+    piechartadapter.h
