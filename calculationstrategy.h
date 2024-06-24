@@ -18,8 +18,6 @@ public:
     virtual void OnFinish(QMap<QString, qint64> data) = 0;
     virtual void resetObserver(FileBrowserObserver* f) = 0;
     virtual ~CalculationStrategy() = default;
-private:
-    FileBrowserObserver* observer;
 };
 
 

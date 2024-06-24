@@ -23,8 +23,8 @@ private slots:
 public:
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
-    void Calculation(QString path);
 private:
+    void Calculation(QString path);
 	QFileSystemModel *dirModel;
 	QTreeView *treeView;
 
